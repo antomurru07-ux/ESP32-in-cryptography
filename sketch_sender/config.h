@@ -16,12 +16,12 @@
 #define I2C1_SDA 8
 
 // ─── ESP-NOW ────────────────────────────────────────────────────────────────
-// Indirizzo MAC del ricevitore
+// MAC Address of the receiver
 extern uint8_t receiverAddress[6];
 
-#define PMK_KEY_STR "MyPMK1234567890"
-#define LMK_KEY_STR "MyLMK1234567890"
+#define PMK_KEY_STR "MyPMK1234567890" // Primary Master Key: must be the same on ALL devices in the network
+#define LMK_KEY_STR "MyLMK1234567890" // Local Master Key: per-peer key, must match between this device and the specific peer
 
 // ─── AES-128 ────────────────────────────────────────────────────────────────
-// Chiave AES: definita in crypto.cpp
+// AES key: defined in crypto.cpp
 extern const uint8_t AES_KEY[16];
