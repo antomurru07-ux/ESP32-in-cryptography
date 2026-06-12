@@ -14,7 +14,7 @@ bool sd_init() {
     return false;
   }
   if (SD.cardType() == CARD_NONE) {
-    Serial.println("[SD] Nessuna SD inserita");
+    Serial.println("[SD] No SD insert");
     return false;
   }
   Serial.println("[SD] OK");
@@ -25,7 +25,7 @@ bool sd_init() {
 void sd_append(const char* path, const char* message) {
   File file = SD.open(path, FILE_APPEND);
   if (!file) {
-    Serial.printf("[SD] Impossibile aprire %s in append\n", path);
+    Serial.printf("[SD] Impossible to opne %s in append\n", path);
     return;
   }
   file.print(message);
@@ -34,10 +34,10 @@ void sd_append(const char* path, const char* message) {
 
 // ─── Read ───────────────────────────────────────────────────────────────────
 void sd_read(const char* path) {
-  Serial.printf("[SD] Lettura file: %s\n", path);
+  Serial.printf("[SD] Reading file: %s\n", path);
   File file = SD.open(path);
   if (!file) {
-    Serial.printf("[SD] Impossibile aprire %s\n", path);
+    Serial.printf("[SD] Impossible open %s\n", path);
     return;
   }
   while (file.available()) Serial.write(file.read());
