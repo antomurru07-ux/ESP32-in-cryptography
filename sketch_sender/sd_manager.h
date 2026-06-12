@@ -2,17 +2,17 @@
 #include <Arduino.h>
 
 /**
- * Inizializza SPI e monta la SD card.
- * @return true se OK
+ * Initialize SPI and mount SD card
+ * @return true if OK
  */
 bool sd_init();
 
 /**
- * Aggiunge message in coda al file path.
+ * Add message at the bottom of the path file
  */
 void sd_append(const char* path, const char* message);
 
 /**
- * Legge e stampa sul Serial il contenuto del file path.
+ * Read and print on Serial the data of the path file 
  */
 void sd_read(const char* path);
