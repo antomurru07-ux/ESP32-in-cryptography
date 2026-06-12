@@ -5,14 +5,14 @@
 #include "mbedtls/ctr_drbg.h"
 #include <string.h>
 
-// ─── Chiave AES-128 (16 byte) ───────────────────────────────────────────────
-// In produzione: caricarla dalla NVS invece di metterla qui
+// ─── Key AES-128 (16 byte) ───────────────────────────────────────────────
+// In real life scenario: load it from NVS, not from here
 const uint8_t AES_KEY[16] = {
   0x2B, 0x7E, 0x15, 0x16, 0x28, 0xAE, 0xD2, 0xA6,
   0xAB, 0xF7, 0x15, 0x88, 0x09, 0xCF, 0x4F, 0x3C
 };
 
-// Stato interno del generatore casuale (privato a questo file)
+// Internal status of the random generator(proivate to this file)
 static mbedtls_ctr_drbg_context ctr_drbg;
 static mbedtls_entropy_context   entropy;
 
@@ -27,7 +27,7 @@ static size_t pkcs7_pad(const char* in, size_t in_len,
   return total;
 }
 
-// ─── Inizializzazione DRBG ──────────────────────────────────────────────────
+// ─── Initializing DRBG ──────────────────────────────────────────────────
 bool crypto_init() {
   mbedtls_entropy_init(&entropy);
   mbedtls_ctr_drbg_init(&ctr_drbg);
@@ -35,7 +35,7 @@ bool crypto_init() {
   int ret = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy,
                                    (const unsigned char*)pers, strlen(pers));
   if (ret != 0) {
-    Serial.println("[crypto] Errore init DRBG");
+    Serial.println("[crypto] Error init DRBG");
     return false;
   }
   Serial.println("[crypto] DRBG OK");
@@ -51,17 +51,17 @@ size_t encrypt_data(const char* plain_text, uint8_t* out_buf, size_t out_size) {
   size_t padded_len = pkcs7_pad(plain_text, pt_len, padded, sizeof(padded));
   if (padded_len == 0 || (16 + padded_len) > out_size) return 0;
 
-  // 2. Genera IV casuale
+  // 2. Generate IV random
   uint8_t iv[16];
   if (mbedtls_ctr_drbg_random(&ctr_drbg, iv, 16) != 0) {
-    Serial.println("[crypto] Errore generazione IV");
+    Serial.println("[crypto] Error generating IV");
     return 0;
   }
 
-  // 3. Copia IV in testa all'output (serve al ricevitore per decifrare)
+  // 3. Copy IV in the header of the output ( needed by the receiver to decrypt)
   memcpy(out_buf, iv, 16);
 
-  // 4. CBC encrypt (usa copia dell'IV perché la funzione lo modifica)
+  // 4. CBC encrypt (use a copy of the IV )
   uint8_t iv_copy[16];
   memcpy(iv_copy, iv, 16);
 
@@ -74,13 +74,13 @@ size_t encrypt_data(const char* plain_text, uint8_t* out_buf, size_t out_size) {
   mbedtls_aes_free(&aes);
 
   if (ret != 0) {
-    Serial.println("[crypto] Errore cifratura CBC");
+    Serial.println("[crypto] Error encryption CBC");
     return 0;
   }
   return 16 + padded_len;  // IV + ciphertext
 }
 
-// ─── Bytes → stringa HEX ────────────────────────────────────────────────────
+// ─── Bytes → string HEX ────────────────────────────────────────────────────
 void bytes_to_hex(const uint8_t* data, size_t len, char* hex_out) {
   for (size_t i = 0; i < len; i++) {
     sprintf(hex_out + i * 2, "%02X", data[i]);
