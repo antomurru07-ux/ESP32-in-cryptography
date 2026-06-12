@@ -13,5 +13,5 @@ void setup() {
 
 void loop() {
   delay(1000);
-  Serial.println("Nessun pacchetto ricevuto");
+  Serial.println("no packet received");
 }
