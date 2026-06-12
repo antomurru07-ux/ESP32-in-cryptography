@@ -12,7 +12,7 @@ extern uint8_t      masterMacAddress[6];
 extern const char*  PMK_KEY_STR;
 extern const char*  LMK_KEY_STR;
 
-// ── Struttura messaggio ──────────────────────────
+// ── Message structure ──────────────────────────
 typedef struct {
   int  counter;
   char x[80];
