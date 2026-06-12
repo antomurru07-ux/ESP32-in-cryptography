@@ -18,11 +18,11 @@ void printMAC(const uint8_t* mac_addr) {
 
 void OnDataRecv(const uint8_t* mac_addr, const uint8_t* incomingData, int len) {
 
-  Serial.print("Pacchetto da: ");
+  Serial.print("Packet from: ");
   printMAC(mac_addr);
   memcpy(&myData, incomingData, sizeof(myData));
-  Serial.print("Byte ricevuti: "); Serial.println(len);
-  Serial.print("Numero:        "); Serial.println(myData.counter);
+  Serial.print("Byte recived: "); Serial.println(len);
+  Serial.print("Number:        "); Serial.println(myData.counter);
   Serial.print("X:             "); Serial.println(myData.x);
   delay(100);
 
@@ -30,7 +30,7 @@ void OnDataRecv(const uint8_t* mac_addr, const uint8_t* incomingData, int len) {
 
 bool espnow_init() {
   if (esp_now_init() != ESP_OK) {
-    Serial.println("[espnow] Init fallita");
+    Serial.println("[espnow] Init failed");
     return false;
   }
 
@@ -44,7 +44,7 @@ bool espnow_init() {
     peerInfo.lmk[i] = LMK_KEY_STR[i];
 
   if (esp_now_add_peer(&peerInfo) != ESP_OK) {
-    Serial.println("[espnow] Aggiunta peer fallita");
+    Serial.println("[espnow] Adding peer failed");
     return false;
   }
 
